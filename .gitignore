@@ -29,3 +29,9 @@
 *.mdb
 *.opendb
 *.VC.db
+
+# Build folders
+[Bb]uild*/
+Build 10-10/
+build 9-12/
+updated build 10:31/
