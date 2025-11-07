@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     public GameObject Door2;
     public GameObject Door3;
     public GameObject Door4;
+    public GameObject RespawnPoint;
         private AudioSource audioSource;
         private Rigidbody rb;
         private int count;
@@ -41,8 +42,9 @@ public class PlayerController : MonoBehaviour
             count = 0;
             SetCountText();
             winTextObject.SetActive(false);
-            Time.timeScale = 1f; 
-            grounded = true; 
+            Time.timeScale = 1f;
+        grounded = true; 
+            
         }
     
         void OnMove(InputValue movementValue)
@@ -53,14 +55,17 @@ public class PlayerController : MonoBehaviour
         }
     
         void Update()
-        {
-            // Jump logic
+    {
+            
+            Debug.Log("Grounded: " + grounded);
+            // Jump 
             if (Input.GetKeyDown(KeyCode.Space) && grounded)
-            {            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        {            
+                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
                 grounded = false;
             }
     
-            // Pause logic
+            // Pause 
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 TogglePause();
@@ -119,17 +124,18 @@ public class PlayerController : MonoBehaviour
             }
         }
         void OnTriggerEnter(Collider other)
-        {
+    {
+            
             if (other.gameObject.CompareTag("PickUp"))
             {
                 other.gameObject.SetActive(false);
-                count = count + 1;
+            count = count + 1;
+                SetCountText();
                 if (audioSource != null && audioSource.clip != null)
                 {
                     audioSource.Play();
                 }
-                else
-                SetCountText();
+                
             }
                 if (other.gameObject.CompareTag("Enemy"))
             {
@@ -140,7 +146,11 @@ public class PlayerController : MonoBehaviour
     
         }
         private void OnCollisionEnter(Collision collision)
-        {
+    {
+            if (collision.gameObject.CompareTag("respawn"))
+            {
+                transform.position = RespawnPoint.transform.position;
+            }
             if (collision.gameObject.CompareTag("Enemy"))
             {            // Destroy the current object
                 Destroy(gameObject);
@@ -148,11 +158,15 @@ public class PlayerController : MonoBehaviour
                 winTextObject.gameObject.SetActive(true);
                 winTextObject.GetComponent<TextMeshProUGUI>().text = "You Lose!";
             }
-    
-            if (collision.gameObject.CompareTag("Ground"))
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, 2.0f))
+        {
+            if (hit.collider.gameObject.CompareTag("Ground"))
             {
                 grounded = true;
             }
+        }
+            
         }
     
         private void OnCollisionExit(Collision collision)
