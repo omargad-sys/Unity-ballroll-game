@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class PlayerController : MonoBehaviour
     public GameObject Door2;
     public GameObject Door3;
     public GameObject Door4;
+    public GameObject New_Level_Portal;
     public GameObject RespawnPoint;
         private AudioSource audioSource;
         private Rigidbody rb;
@@ -90,7 +92,12 @@ public class PlayerController : MonoBehaviour
             if (count >= 12)
             {
                 winTextObject.SetActive(true);
-                Destroy(GameObject.FindGameObjectWithTag("Enemy"));
+            Destroy(GameObject.FindGameObjectWithTag("Enemy"));
+
+                if (New_Level_Portal != null)
+          {
+              New_Level_Portal.SetActive(true);
+          }
     
             }
             
@@ -123,28 +130,38 @@ public class PlayerController : MonoBehaviour
                 Door1.transform.Rotate(50 * Time.deltaTime ,0, 0);
             }
         }
-        void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
-            
-            if (other.gameObject.CompareTag("PickUp"))
-            {
-                other.gameObject.SetActive(false);
+
+        if (other.gameObject.CompareTag("PickUp"))
+        {
+            other.gameObject.SetActive(false);
             count = count + 1;
-                SetCountText();
-                if (audioSource != null && audioSource.clip != null)
-                {
-                    audioSource.Play();
-                }
-                
-            }
-                if (other.gameObject.CompareTag("Enemy"))
+            SetCountText();
+            if (audioSource != null && audioSource.clip != null)
             {
-                winTextObject.gameObject.SetActive(true);
-                winTextObject.GetComponent<TextMeshProUGUI>().text = "You Lose!";
-                Destroy(gameObject);
+                audioSource.Play();
             }
-    
+
         }
+        if (other.gameObject.CompareTag("Portal"))
+        {
+            LoadNextLevel();
+        }
+
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            winTextObject.gameObject.SetActive(true);
+            winTextObject.GetComponent<TextMeshProUGUI>().text = "You Lose!";
+            Destroy(gameObject);
+        }
+
+    }
+           void LoadNextLevel()
+  {
+      SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+  }
+
         private void OnCollisionEnter(Collision collision)
     {
             if (collision.gameObject.CompareTag("respawn"))
