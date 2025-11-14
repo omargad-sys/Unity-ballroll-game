@@ -11,6 +11,6 @@ public class sun_rotation : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-      transform.Rotate(0,1.2f/15,0);   
+      transform.Rotate(0,1.2f/30,0);   
     }
 }

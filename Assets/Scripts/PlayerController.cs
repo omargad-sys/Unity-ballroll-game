@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
     public GameObject Door2;
     public GameObject Door3;
     public GameObject Door4;
+    public GameObject Door5;
+
     public GameObject New_Level_Portal;
     public GameObject RespawnPoint;
         private AudioSource audioSource;
@@ -92,7 +94,10 @@ public class PlayerController : MonoBehaviour
             if (count >= 12)
             {
                 winTextObject.SetActive(true);
-            Destroy(GameObject.FindGameObjectWithTag("Enemy"));
+                foreach (GameObject enemy in GameObject.FindGameObjectsWithTag("Enemy"))
+                {
+                    Destroy(enemy);
+                }
 
                 if (New_Level_Portal != null)
           {
@@ -109,10 +114,11 @@ public class PlayerController : MonoBehaviour
             {
                 Destroy(Door3);
             }
-              if (count >= 10)
-            {
-                Destroy(Door4);
-            }
+        if (count >= 10)
+        {
+            Destroy(Door4); Destroy(Door5);
+        }
+            
         }
         void FixedUpdate()
         {
