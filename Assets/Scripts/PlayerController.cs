@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
 {
 
     public float speed = 0;
-    public float jumpForce = 8.0f;
+    public float jumpForce = 1.5f;
     public float sprintMultiplier = 2.0f;
     public TextMeshProUGUI countText;
     public GameObject winTextObject;
